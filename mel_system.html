@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MEL Automation System | Yosef Kinfe</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #1a73e8;
+            --secondary: #e37400;
+            --success: #0d7a3e;
+            --warning: #e67c00;
+            --danger: #c5221f;
+            --light: #f8f9fa;
+            --dark: #202124;
+            --gray: #5f6368;
+            --border: #dadce0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f0f2f5;
+            color: var(--dark);
+            line-height: 1.5;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logo p {
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+
+        .demo-badge {
+            background: #fef7e0;
+            color: #b06500;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .demo-badge i {
+            margin-right: 0.5rem;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Alert */
+        .alert {
+            background: #fef7e0;
+            border-left: 4px solid var(--secondary);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .alert i {
+            font-size: 1.25rem;
+            color: var(--secondary);
+        }
+
+        /* Grid Layout */
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 1.5rem;
+        }
+
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-header {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+            font-weight: 600;
+            font-size: 1.1rem;
+            background: white;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 1.5rem;
+        }
+
+        .sidebar-section {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .sidebar-section:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .sidebar-title {
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--gray);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Form Elements */
+        input, select, textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(26,115,232,0.1);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+            width: 100%;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1557b0;
+        }
+
+        /* Table */
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+
+        th, td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            background: var(--light);
+            font-weight: 600;
+        }
+
+        input[type="number"] {
+            width: 100px;
+            padding: 0.4rem;
+        }
+
+        /* Status Badges */
+        .status-green { background: #e6f4ea; color: var(--success); padding: 0.25rem 0.75rem; border-radius: 50px; font-size: 0.75rem; font-weight: 600; display: inline-block; }
+        .status-amber { background: #fef7e0; color: var(--warning); padding: 0.25rem 0.75rem; border-radius: 50px; font-size: 0.75rem; font-weight: 600; display: inline-block; }
+        .status-red { background: #fce8e6; color: var(--danger); padding: 0.25rem 0.75rem; border-radius: 50px; font-size: 0.75rem; font-weight: 600; display: inline-block; }
+        .status-none { background: #f1f3f4; color: var(--gray); padding: 0.25rem 0.75rem; border-radius: 50px; font-size: 0.75rem; font-weight: 600; display: inline-block; }
+
+        /* Metrics */
+        .metric {
+            text-align: center;
+            padding: 1rem;
+            background: var(--light);
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .metric-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .metric-label {
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+
+        /* Framework selector pills */
+        .framework-pills {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+
+        .pill {
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            background: var(--light);
+            transition: all 0.2s;
+            font-size: 0.85rem;
+        }
+
+        .pill.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--gray);
+            font-size: 0.8rem;
+            border-top: 1px solid var(--border);
+            margin-top: 2rem;
+        }
+
+        @media (max-width: 900px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+            .container {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <div class="header-content">
+        <div class="logo">
+            <h1>📊 MEL Automation System</h1>
+            <p>DAC | USAID | EU | UN | LogFrame-based Monitoring</p>
+        </div>
+        <div class="demo-badge">
+            <i class="fas fa-laptop-code"></i> DEMO MODE - Contact for Enterprise
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <!-- Demo Alert -->
+    <div class="alert">
+        <i class="fas fa-info-circle"></i>
+        <span>🔐 DEMO MODE - No real data stored. Contact <strong>Yosef Kinfe</strong> at <strong>Woyosef@yahoo.com</strong> for enterprise deployment.</span>
+    </div>
+
+    <div class="dashboard">
+        <!-- Left Column: LogFrame Table -->
+        <div class="card">
+            <div class="card-header">
+                📋 Logical Framework with Indicators
+                <span style="float: right; font-size: 0.8rem; font-weight: normal;">Mid-term Assessment — Enter actual values</span>
+            </div>
+            <div class="card-body">
+                <div class="table-wrapper">
+                    <table id="logframe-table">
+                        <thead>
+                            <tr><th>Level</th><th>Indicator</th><th>Baseline</th><th>Target</th><th>Actual Value</th><th>Unit</th></tr>
+                        </thead>
+                        <tbody id="table-body">
+                            <!-- Data loaded via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column: Dashboard -->
+        <div>
+            <div class="sidebar">
+                <div class="sidebar-section">
+                    <div class="sidebar-title">⚙️ Configuration</div>
+                    <label>Project / Program Name</label>
+                    <input type="text" id="project-name" value="Rural Development Project" style="margin-bottom: 1rem;">
+                    
+                    <label>Assessment Stage</label>
+                    <select id="assessment-stage" style="margin-bottom: 1rem;">
+                        <option value="Mid">Mid-term</option>
+                        <option value="Final">Final</option>
+                    </select>
+                    
+                    <label>MEL Framework</label>
+                    <div class="framework-pills" id="framework-pills">
+                        <div class="pill active" data-framework="DAC">DAC</div>
+                        <div class="pill" data-framework="USAID">USAID</div>
+                        <div class="pill" data-framework="EU">EU</div>
+                        <div class="pill" data-framework="UN">UN</div>
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <button class="btn btn-primary" id="run-assessment" style="margin-bottom: 1rem;">
+                        🚀 Run Automated Assessment
+                    </button>
+                </div>
+
+                <div class="sidebar-section">
+                    <div class="sidebar-title">👨‍💻 Developer</div>
+                    <p><strong>Yosef Kinfe</strong><br>📧 Woyosef@yahoo.com</p>
+                </div>
+            </div>
+
+            <!-- Results Card -->
+            <div class="card" id="results-card" style="display: none;">
+                <div class="card-header">📈 Performance Dashboard</div>
+                <div class="card-body">
+                    <div class="metric">
+                        <div class="metric-value" id="avg-achievement">0%</div>
+                        <div class="metric-label">Average Achievement</div>
+                    </div>
+                    
+                    <div id="status-summary" style="margin-bottom: 1rem;"></div>
+                    
+                    <div id="framework-score" style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border);">
+                        <h4 id="framework-title" style="margin-bottom: 0.5rem;">DAC Assessment</h4>
+                        <div class="metric-value" id="total-score" style="font-size: 1.5rem;">0 / 100</div>
+                        <div id="rating"></div>
+                    </div>
+                    
+                    <button id="download-report" class="btn btn-primary" style="margin-top: 1rem; background: var(--success);">
+                        📥 Download Excel Report
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="footer">
+    Developed by <strong>Yosef Kinfe</strong> | 📧 <a href="mailto:Woyosef@yahoo.com">Woyosef@yahoo.com</a> | v1.0<br>
+    Supports LogFrame-based indicators | Traffic light + multi-criteria scoring
+</div>
+
+<script>
+    // Default LogFrame Data
+    const defaultIndicators = [
+        { level: "Goal", indicator: "Reduced poverty by 20%", baseline: 40, targetMid: 35, targetFinal: 20, unit: "%" },
+        { level: "Outcome", indicator: "Households with improved income", baseline: 120, targetMid: 150, targetFinal: 200, unit: "HH" },
+        { level: "Output", indicator: "Farmers trained", baseline: 0, targetMid: 500, targetFinal: 1000, unit: "farmers" },
+        { level: "Output", indicator: "Adoption of new techniques", baseline: 0, targetMid: 30, targetFinal: 70, unit: "%" },
+        { level: "Activity", indicator: "Training sessions conducted", baseline: 0, targetMid: 15, targetFinal: 30, unit: "sessions" }
+    ];
+
+    let currentData = JSON.parse(JSON.stringify(defaultIndicators));
+    let currentFramework = "DAC";
+    let currentStage = "Mid";
+
+    // Initialize table
+    function renderTable() {
+        const tbody = document.getElementById('table-body');
+        tbody.innerHTML = '';
+        
+        currentData.forEach((item, idx) => {
+            const target = currentStage === "Mid" ? item.targetMid : item.targetFinal;
+            const actual = item.actual !== undefined ? item.actual : '';
+            
+            const row = tbody.insertRow();
+            row.insertCell(0).innerHTML = `<strong>${item.level}</strong>`;
+            row.insertCell(1).innerHTML = item.indicator;
+            row.insertCell(2).innerHTML = item.baseline;
+            row.insertCell(3).innerHTML = target;
+            row.insertCell(4).innerHTML = `<input type="number" id="actual-${idx}" value="${actual}" placeholder="Enter value" style="width: 100px;">`;
+            row.insertCell(5).innerHTML = item.unit;
+        });
+    }
+
+    // Traffic light function
+    function getTrafficLight(actual, target) {
+        if (!actual || actual === '' || !target || target === 0) return { class: "status-none", text: "⚪ Not assessed" };
+        const ratio = actual / target;
+        if (ratio >= 0.95) return { class: "status-green", text: "🟢 Green (On track)" };
+        if (ratio >= 0.70) return { class: "status-amber", text: "🟡 Amber (Partial)" };
+        return { class: "status-red", text: "🔴 Red (Off track)" };
+    }
+
+    // Calculate performance
+    function calculatePerformance() {
+        // Collect actual values
+        const actuals = [];
+        currentData.forEach((item, idx) => {
+            const input = document.getElementById(`actual-${idx}`);
+            const actualVal = input && input.value !== '' ? parseFloat(input.value) : null;
+            actuals.push(actualVal);
+        });
+
+        const results = [];
+        let totalAchievement = 0;
+        let validCount = 0;
+        const statusCounts = {};
+
+        currentData.forEach((item, idx) => {
+            const actual = actuals[idx];
+            const target = currentStage === "Mid" ? item.targetMid : item.targetFinal;
+            const achievement = (actual && target && target > 0) ? (actual / target) * 100 : null;
+            const status = getTrafficLight(actual, target);
+            
+            if (achievement !== null) {
+                totalAchievement += achievement;
+                validCount++;
+            }
+            
+            statusCounts[status.text] = (statusCounts[status.text] || 0) + 1;
+            
+            results.push({
+                indicator: item.indicator,
+                actual: actual,
+                target: target,
+                achievement: achievement,
+                status: status.text
+            });
+        });
+
+        const avgAchievement = validCount > 0 ? (totalAchievement / validCount) : 0;
+        
+        return { results, avgAchievement, statusCounts };
+    }
+
+    // Framework assessment
+    function assessFramework(avgAchievement) {
+        const frameworks = {
+            DAC: { maxScore: 5, criteria: ["Relevance", "Effectiveness", "Efficiency", "Impact", "Sustainability"] },
+            USAID: { maxScore: 5, criteria: ["Relevance", "Effectiveness", "Efficiency", "Sustainability", "Cross-cutting"] },
+            EU: { maxScore: 6, criteria: ["Relevance", "Coherence", "Effectiveness", "Efficiency", "Impact", "Sustainability"] },
+            UN: { maxScore: 5, criteria: ["Relevance", "Effectiveness", "Efficiency", "Impact", "Sustainability", "Human Rights"] }
+        };
+        
+        const fw = frameworks[currentFramework];
+        const baseScore = Math.min(fw.maxScore, Math.max(1, (avgAchievement / 100) * fw.maxScore));
+        
+        let totalScore100 = (avgAchievement / 100) * 100;
+        let rating = totalScore100 >= 85 ? "Excellent" : (totalScore100 >= 70 ? "Good" : (totalScore100 >= 50 ? "Needs Improvement" : "Unsatisfactory"));
+        
+        return { totalScore: Math.round(totalScore100), rating };
+    }
+
+    // Run main assessment
+    function runAssessment() {
+        const { results, avgAchievement, statusCounts } = calculatePerformance();
+        const frameworkResult = assessFramework(avgAchievement);
+        
+        // Update UI
+        document.getElementById('avg-achievement').innerHTML = `${avgAchievement.toFixed(1)}%`;
+        document.getElementById('framework-title').innerHTML = `${currentFramework} Assessment`;
+        document.getElementById('total-score').innerHTML = `${frameworkResult.totalScore} / 100`;
+        document.getElementById('rating').innerHTML = `<strong>Rating:</strong> ${frameworkResult.rating}`;
+        
+        // Status summary
+        const statusDiv = document.getElementById('status-summary');
+        statusDiv.innerHTML = '<strong>Status Summary</strong><br>';
+        for (const [status, count] of Object.entries(statusCounts)) {
+            statusDiv.innerHTML += `${status}: ${count}<br>`;
+        }
+        
+        document.getElementById('results-card').style.display = 'block';
+        
+        // Store results for export
+        window.lastResults = { results, avgAchievement, frameworkResult, statusCounts };
+    }
+
+    // Generate Excel-like CSV download
+    function downloadReport() {
+        if (!window.lastResults) return;
+        
+        let csv = "Indicator,Target,Actual,Achievement %,Status\n";
+        window.lastResults.results.forEach(r => {
+            csv += `"${r.indicator}",${r.target || ''},${r.actual || ''},${r.achievement ? r.achievement.toFixed(1) : 'N/A'},"${r.status}"\n`;
+        });
+        csv += `\nAverage Achievement,${window.lastResults.avgAchievement.toFixed(1)}%\n`;
+        csv += `Framework,${currentFramework}\n`;
+        csv += `Overall Score,${window.lastResults.frameworkResult.totalScore}/100\n`;
+        csv += `Rating,${window.lastResults.frameworkResult.rating}\n`;
+        csv += `Developer,Yosef Kinfe\n`;
+        csv += `Email,Woyosef@yahoo.com\n`;
+        csv += `Report Generated,${new Date().toLocaleString()}\n`;
+        
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `MEL_Report_${document.getElementById('project-name').value}_${currentStage}_${currentFramework}_${new Date().toISOString().slice(0,10)}.csv`;
+        a.click();
+        URL.revokeObjectURL(url);
+    }
+
+    // Framework pill click handler
+    document.querySelectorAll('.pill').forEach(pill => {
+        pill.addEventListener('click', function() {
+            document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+            this.classList.add('active');
+            currentFramework = this.dataset.framework;
+        });
+    });
+
+    // Stage change
+    document.getElementById('assessment-stage').addEventListener('change', function(e) {
+        currentStage = e.target.value;
+        renderTable();
+    });
+
+    // Run button
+    document.getElementById('run-assessment').addEventListener('click', runAssessment);
+    
+    // Download button
+    document.getElementById('download-report').addEventListener('click', downloadReport);
+
+    // Initialize
+    renderTable();
+</script>
+</body>
+</html>
